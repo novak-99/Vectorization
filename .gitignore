@@ -1,2 +1,2 @@
-add.o
-addNoVec.o
+*.o
+.DS_Store
