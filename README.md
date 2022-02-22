@@ -108,8 +108,18 @@ And for ```addNoVec.cpp```:
 g++ addNoVec.cpp -std=c++17 -S -masm=intel 
 ```
 
-If we look into both of the assembly files, we notice that in ```addNoVec.cpp```, the line: 
+If we look into both of the assembly files, we notice that in ```addNoVec.cpp```, at line 58: 
 
 ```nasm
 addss	xmm0, dword ptr [rbp + 4*rax - 4194320]
 ```
+
+The ```addss``` instruction is used, and the register ```xmm0``` is used. The ```addss``` instruction in ASM effectively two floating point values individually. Further, the ```xmm``` registers can store 128 bits of data. However, because the ```addss``` operation is used, we must know that only 32 bits (the size of a float) is being used up each time. This of course makes sense, as in traditional programming, such operations are typically done sequentially. Finally, we notice the utilization of ```dword ptr```. ```dword``` is a data type containing of size 32-bits, meaning that the data we are working with must be, at this point, 32-bit. This of course makes sense, as again, each float is 32-bits in size. 
+
+Meanwhile, if we take a look at the ASM code for ```add.cpp```, we notice that the file is significantly longer, and that in the same loop, the add operation has been changed to: 
+
+```nasm
+vaddps	ymm0, ymm0, ymmword ptr [rsp + 224]
+```
+
+We notice t hat the ```addss``` ASM instruction has been swapped out for the ```vaddps```. The reasoning for this is because ```vaddps``` is a similar instruction to ```addss```, except for the fact that rather than adding two floating point numbers, it adds two *packed* groups of floating point numbers, or in other words, an array or group of them. This is done simultaneously, which is where our vectorization and speed is derived. Further, it is significant to note the change in utilization of the ```xmm0``` register to the ```ymm0``` register. The ```ymm``` registers can store 256 bits of data as opposed to 128 bits at a time, and this is intuitive because in our code example, we batched each group of floats into 8, which evaluates to 8 * 32 or 256 bits. Lastly, we notice the utilization of the ```ymmword ptr```, which as you could guess, indicates that we are using data of size 256 bits. This by extension indicates that this vectorized technique is actually more space efficient too, because in the previous example, we were utilizing the 128-bit ```xmm``` registers, but we were only storing 32 bits of data each iteration! Meanwhile, all of the 256 bits of data in the ```ymm0``` regsiter are used up by our data.
