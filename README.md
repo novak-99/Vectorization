@@ -92,7 +92,7 @@ And for ```addNoVec.o```:
 
 ```./addNoVec.o  1.26s user 0.02s system 97% cpu 1.308 total```
 
-Wow, that is a reduction in speed of over a factor of 6! If this was a very minor optimization for a trivial example, one could imagine the extent of efficiency that could be attained using techniques such as intrinsic functions/vectorization more thoroughly. 
+Wow, that is a reduction in speed of over a factor of 10! If this was a very minor optimization for a trivial example, one could imagine the extent of efficiency that could be attained using techniques such as intrinsic functions/vectorization more thoroughly. 
 
 ### Assembly 
 In using vectorized code, we made one major, saliant change to the inner working assembly code. We can get the ASM output for both of the files using g++ in a .s file (or you could use the ASM outputs in the repo): 
