@@ -25,7 +25,7 @@ int main(){
         __m256 sub_arr2 = _mm256_set_ps(arr2[i-8], arr2[i-7], arr2[i-6], arr2[i-5], 
                 arr2[i-4], arr2[i-3], arr2[i-2], arr2[i-1]); 
 
-        for(int i = 0; i < ADD_NUM; i++){ // Add 1000 times. 
+        for(int j = 0; j < ADD_NUM; j++){ // Add 1000 times. 
             __m256 sub_arr3 = _mm256_add_ps(sub_arr1, sub_arr2);
         }
     }

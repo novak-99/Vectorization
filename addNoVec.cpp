@@ -19,7 +19,7 @@ int main(){
     }
 
     for(int i = 0; i < ARR_SIZE; i++){ // ARR_SIZE = 4096 * 128
-        for(int i = 0; i < ADD_NUM; i++){ // Add 1000 times.
+        for(int j = 0; j < ADD_NUM; j++){ // Add 1000 times.
             arr3[i] = arr1[i] + arr2[i];
         }
     }

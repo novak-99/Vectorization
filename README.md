@@ -30,7 +30,7 @@ The ASM code snippets utilized in this demonstration are in x86_64 ASM and use t
 If we open the ```addNoVec.cpp``` file, we notice the following for loop at line 21:
 ```cpp 
 for(int i = 0; i < ARR_SIZE; i++){ // ARR_SIZE = 4096 * 128
-    for(int i = 0; i < ADD_NUM; i++){ // Add 1000 times.
+    for(int j = 0; j < ADD_NUM; j++){ // Add 1000 times.
         arr3[i] = arr1[i] + arr2[i];
     }
 }
@@ -40,15 +40,14 @@ Effectively, we notice 2 contiguous C++ arrays (which hold data of type 32-bit f
 In the file ```add.cpp```, also at line 21, we see the same loop except vectorized. Note the inclusion of the ```<immintrin.h>``` header file at the top of the file.
 
 ```cpp
-
 for(int i = INTRIN_SIZE; i <= ARR_SIZE; i+=INTRIN_SIZE){ // ARR_SIZE = 4096 * 128
     __m256 sub_arr1 = _mm256_set_ps(arr1[i-8], arr1[i-7], arr1[i-6], arr1[i-5], 
-    arr1[i-4], arr1[i-3], arr1[i-2], arr1[i-1]); // first iteration: 0,1,2,3,4,5,6,7...
+            arr1[i-4], arr1[i-3], arr1[i-2], arr1[i-1]); // first iteration: 0,1,2,3,4,5,6,7...
 
     __m256 sub_arr2 = _mm256_set_ps(arr2[i-8], arr2[i-7], arr2[i-6], arr2[i-5], 
-    arr2[i-4], arr2[i-3], arr2[i-2], arr2[i-1]); 
+            arr2[i-4], arr2[i-3], arr2[i-2], arr2[i-1]); 
 
-    for(int i = 0; i < ADD_NUM; i++){ // Add 1000 times. 
+    for(int j = 0; j < ADD_NUM; j++){ // Add 1000 times. 
         __m256 sub_arr3 = _mm256_add_ps(sub_arr1, sub_arr2);
     }
 }
@@ -87,11 +86,11 @@ time ./addNoVec.o
 
 Results will likely vary, but for ```add.o```, my execution time was stated to be:
 
-```./add.o 0.12s user 0.01s system 97% cpu 0.125 total```
+```./add.o  0.12s user 0.00s system 96% cpu 0.128 total```
 
 And for ```addNoVec.o```:
 
-```./addNoVec.o 0.67s user 0.00s system 89% cpu 0.754 total```
+```./addNoVec.o  1.26s user 0.02s system 97% cpu 1.308 total```
 
 Wow, that is a reduction in speed of over a factor of 6! If this was a very minor optimization for a trivial example, one could imagine the extent of efficiency that could be attained using techniques such as intrinsic functions/vectorization more thoroughly. 
 
